@@ -61,6 +61,10 @@ function App() {
     setEditing([todo, ...editing]);
   };
 
+  const handleDeleteRequest = (todo: TodoType) => {
+    setTodos(todos.filter((t) => t !== todo));
+  };
+
   const filteredTodos = todos.filter((todo) => filter.includes(todo.status));
 
   return (
@@ -73,7 +77,7 @@ function App() {
         <FilterBar filter={filter} onChange={setFilter} />
         <div>
           {editing
-            .filter((todo) => !todos.some((t) => t.id === todo.id))
+            .filter((todo) => !todos.some((t) => t === todo))
             .map((todo) => (
               <EditableTodoCard
                 key={todo.id}
@@ -95,6 +99,7 @@ function App() {
                 key={todo.id}
                 data={todo}
                 onEditRequest={handleEditRequest}
+                onDeleteRequest={handleDeleteRequest}
               />
             )
           )}
