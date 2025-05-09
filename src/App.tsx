@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FilterBar from "./components/filtering/filters";
 import Header from "./components/header";
 import type { TodoStatus, TodoType } from "./types/types";
 import EditableTodoCard from "./components/editable-todo-card";
 import TodoCard from "./components/todo-card";
+import axios from "axios";
 
 function App() {
   const [filter, setFilter] = useState<TodoStatus[]>([
@@ -14,6 +15,16 @@ function App() {
 
   const [todos, setTodos] = useState<TodoType[]>([]);
   const [editing, setEditing] = useState<TodoType[]>([]);
+
+  const fetchTodos = () => {
+    axios.get<TodoType[]>("/api/todo").then((response) => {
+      setTodos(response.data);
+    });
+  };
+
+  useEffect(() => {
+    fetchTodos();
+  }, []);
 
   const generateUniqueId = (): string => {
     const allIds = [...todos, ...editing].map((todo) => todo.id);
@@ -34,27 +45,27 @@ function App() {
   };
 
   const handleCancelEdit = (id: string) => {
-    console.log(`Cancel ${id} Editing ${editing.map((e) => e.id)}`);
     setEditing(editing.filter((todo) => todo.id !== id));
   };
 
   const handleSubmitEdit = (updatedTodo: TodoType) => {
-    if (!updatedTodo.description.trim()) {
-      alert("Description is required");
-      return;
-    }
-
     setEditing(editing.filter((todo) => todo.id !== updatedTodo.id));
-    setTodos((prev) => {
-      const exists = prev.some((todo) => todo.id === updatedTodo.id);
-      if (exists) {
-        return prev.map((todo) =>
-          todo.id === updatedTodo.id ? updatedTodo : todo
-        );
-      }
-      return [updatedTodo, ...prev];
-    });
-    // TODO: Send to database (e.g., API call)
+
+    const exists = todos.some((todo) => todo.id === updatedTodo.id);
+    let newTodoState: TodoType[];
+    if (exists) {
+      axios.put(`/api/todo/${updatedTodo.id}`, updatedTodo);
+      newTodoState = todos.map((todo) =>
+        todo.id === updatedTodo.id ? updatedTodo : todo
+      );
+    } else {
+      axios.post("/api/todo", updatedTodo).then((response) => {
+        updatedTodo = response.data;
+      });
+
+      newTodoState = [updatedTodo, ...todos];
+    }
+    setTodos(newTodoState);
   };
 
   const handleEditRequest = (todo: TodoType) => {
@@ -62,6 +73,7 @@ function App() {
   };
 
   const handleDeleteRequest = (todo: TodoType) => {
+    axios.delete(`/api/todo/${todo.id}`);
     setTodos(todos.filter((t) => t !== todo));
   };
 
