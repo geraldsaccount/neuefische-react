@@ -1,9 +1,10 @@
-import type { TodoStatus } from "../../types/types";
+import type { TodoStatus, TodoType } from "../../types/types";
 import FilterSelector from "./filter-selector";
 
 type Props = {
   filter: TodoStatus[];
   onChange: (statuses: TodoStatus[]) => void;
+  todos: TodoType[];
 };
 
 interface Option {
@@ -11,7 +12,7 @@ interface Option {
   label: string;
 }
 
-const FilterBar = ({ filter, onChange }: Props) => {
+const FilterBar = ({ filter, onChange, todos }: Props) => {
   const options: Option[] = [
     { value: ["DONE", "IN_PROGRESS", "OPEN"], label: "All" },
     { value: ["OPEN"], label: "Open" },
@@ -41,6 +42,11 @@ const FilterBar = ({ filter, onChange }: Props) => {
           label={o.label}
           checked={arraysEqual(filter, o.value)}
           onChange={handleChange}
+          count={
+            todos.filter((todo) =>
+              o.value.some((status) => todo.status === status)
+            ).length
+          }
         />
       ))}
     </div>

@@ -86,7 +86,7 @@ function App() {
         <button aria-label="Add Task" onClick={handleCreateTodo}>
           New Task
         </button>
-        <FilterBar filter={filter} onChange={setFilter} />
+        <FilterBar filter={filter} onChange={setFilter} todos={todos} />
         <div>
           {editing
             .filter((todo) => !todos.some((t) => t === todo))

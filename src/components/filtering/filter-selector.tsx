@@ -1,11 +1,10 @@
-import type { TodoStatus } from "../../types/types";
-
 export type FilterSelectorProps = {
   name: string;
   value: string;
   label: string;
   checked: boolean;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  count: number;
 };
 
 const FilterSelector = ({
@@ -14,6 +13,7 @@ const FilterSelector = ({
   label,
   checked,
   onChange,
+  count,
 }: FilterSelectorProps) => {
   return (
     <label>
@@ -24,7 +24,7 @@ const FilterSelector = ({
         checked={checked}
         onChange={onChange}
       />
-      {label}
+      {label} {count}
     </label>
   );
 };
