@@ -33,7 +33,7 @@ const FilterBar = ({ filter, onChange, todos }: Props) => {
   };
 
   return (
-    <div>
+    <div className="flex gap-1">
       {options.map((o) => (
         <FilterSelector
           key={o.label}

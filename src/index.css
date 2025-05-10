@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+@theme {
+  --font-robotomono: "Roboto Mono", monospace;
+  --color-jet: oklch(0.32 0 0);
+  --color-lavenderblush: rgb(243, 232, 238);
+  --color-redwood: rgb(168, 87, 81);
+  --color-skyblue: rgb(129, 195, 215);
+}
+
+body {
+  font-family: "Roboto Mono", monospace;
+}

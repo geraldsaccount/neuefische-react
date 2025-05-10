@@ -5,6 +5,7 @@ import type { TodoStatus, TodoType } from "./types/types";
 import EditableTodoCard from "./components/editable-todo-card";
 import TodoCard from "./components/todo-card";
 import axios from "axios";
+import "./index.css";
 
 function App() {
   const [filter, setFilter] = useState<TodoStatus[]>([
@@ -81,40 +82,48 @@ function App() {
 
   return (
     <>
-      <div>
+      <div className="bg-lavenderblush dark:bg-jet h-screen flex flex-col p-4 gap-4">
         <Header text="geraldstodo" />
-        <button aria-label="Add Task" onClick={handleCreateTodo}>
-          New Task
-        </button>
-        <FilterBar filter={filter} onChange={setFilter} todos={todos} />
-        <div>
-          {editing
-            .filter((todo) => !todos.some((t) => t === todo))
-            .map((todo) => (
-              <EditableTodoCard
-                key={todo.id}
-                data={todo}
-                onCancel={handleCancelEdit}
-                onSubmit={handleSubmitEdit}
-              />
-            ))}
-          {filteredTodos.map((todo) =>
-            editing.some((e) => e.id === todo.id) ? (
-              <EditableTodoCard
-                key={todo.id}
-                data={editing.find((e) => e.id === todo.id)!}
-                onCancel={handleCancelEdit}
-                onSubmit={handleSubmitEdit}
-              />
-            ) : (
-              <TodoCard
-                key={todo.id}
-                data={todo}
-                onEditRequest={handleEditRequest}
-                onDeleteRequest={handleDeleteRequest}
-              />
-            )
-          )}
+        <div className="flex flex-row justify-between">
+          <button
+            className="text-jet dark:text-lavenderblush pl-2 pr-2"
+            aria-label="Add Task"
+            onClick={handleCreateTodo}
+          >
+            New Task
+          </button>
+          <FilterBar filter={filter} onChange={setFilter} todos={todos} />
+        </div>
+        <div className="flex-1 overflow-x-auto">
+          <div className="max-h-full flex flex-col flex-wrap gap-4 content-start">
+            {editing
+              .filter((todo) => !todos.some((t) => t === todo))
+              .map((todo) => (
+                <EditableTodoCard
+                  key={todo.id}
+                  data={todo}
+                  onCancel={handleCancelEdit}
+                  onSubmit={handleSubmitEdit}
+                />
+              ))}
+            {filteredTodos.map((todo) =>
+              editing.some((e) => e.id === todo.id) ? (
+                <EditableTodoCard
+                  key={todo.id}
+                  data={editing.find((e) => e.id === todo.id)!}
+                  onCancel={handleCancelEdit}
+                  onSubmit={handleSubmitEdit}
+                />
+              ) : (
+                <TodoCard
+                  key={todo.id}
+                  data={todo}
+                  onEditRequest={handleEditRequest}
+                  onDeleteRequest={handleDeleteRequest}
+                />
+              )
+            )}
+          </div>
         </div>
       </div>
     </>
